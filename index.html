@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find the Hidden Number</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-900 to-purple-800  min-h-screen flex items-center justify-center">
+
+<div class="flex flex-col justify-center items-center w-80 bg-black text-white p-4 m-6 rounded-lg shadow-md">
+    
+    <h1 class="text-xl font-bold mb-2">Find the Hidden Number</h1>
+    <p id="hint" class="text-sm text-yellow-400 mb-2"></p>
+    <p id="message" class="mb-3"></p>
+
+    <div id="grid" class="grid grid-cols-2 gap-3 w-full"></div>
+
+    <button 
+        onclick="resetGame()" 
+        class="mt-8 bg-blue-600 px-4 py-1 rounded-md hover:bg-blue-400 transition">
+        Reset Game
+    </button>
+</div>
+
+
+   <script>
+    const grid = document.getElementById("grid");
+    const message = document.getElementById("message");
+    const hint = document.getElementById("hint");
+
+    let hiddenIndex;
+    let hiddenNumber;
+
+    const colors = [
+        "bg-blue-600",
+        "bg-green-600",
+        "bg-yellow-500",
+        "bg-red-600",
+        "bg-pink-600",
+        "bg-purple-600",
+        "bg-indigo-600",
+        "bg-orange-500",
+        "bg-teal-600",
+        "bg-lime-600"
+    ];
+
+    function startGame() {
+        grid.innerHTML = "";
+        message.textContent = "Click a box to guess";
+        message.className = "mb-7 text-gray-300";
+
+        hiddenNumber = Math.floor(Math.random() * 10) + 1;
+        hiddenIndex = Math.floor(Math.random() * 10);
+
+        hint.textContent = `Find the number: ${hiddenNumber}`;
+
+        for (let i = 0; i < 10; i++) {
+            const box = document.createElement("div");
+
+            box.className = `
+                h-20 rounded-md cursor-pointer flex items-center justify-center
+                text-xl font-bold text-white
+                ${colors[i]}
+                hover:opacity-80 transition
+            `;
+
+            box.onclick = () => checkBox(i, box);
+            grid.appendChild(box);
+        }
+    }
+
+    function checkBox(index, box) {
+        if (index === hiddenIndex) {
+            box.textContent = hiddenNumber;
+            box.className = `
+                h-20 rounded-md flex items-center justify-center
+                text-2xl font-bold text-white
+                bg-green-500
+            `;
+            message.textContent = "🎉 Correct! You found it🪄🪄!";
+            message.className = "mb-3 text-green-400";
+            disableBoxes();
+        } else {
+            box.textContent = "✖";
+            box.className = `
+                h-20 rounded-md flex items-center justify-center
+                text-xl font-bold text-white
+                bg-gray-600
+            `;
+            box.style.pointerEvents = "none";
+            message.textContent = "❌ Wrong box! Try again...";
+            message.className = "mb-3 text-red-400";
+        }
+    }
+
+    function disableBoxes() {
+        const boxes = grid.children;
+        for (let box of boxes) {
+            box.style.pointerEvents = "none";
+        }
+    }
+
+    function resetGame() {
+        startGame();
+    }
+
+    startGame();
+</script>
+
+
+
+</body>
+</html>
